@@ -1,6 +1,6 @@
 ﻿using RevenueReportGenerator.DTO;
 
-namespace RevenueReportGenerator;
+namespace RevenueReportGenerator.Services;
 
 internal interface IAuthorizationService
 {

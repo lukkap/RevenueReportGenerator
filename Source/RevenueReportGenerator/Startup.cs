@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Refit;
 using RevenueReportGenerator.Contract;
+using RevenueReportGenerator.DTO;
+using RevenueReportGenerator.Services;
 
 namespace RevenueReportGenerator;
 
@@ -22,18 +24,37 @@ internal class Startup
                 services.AddRefitClient<IAuthorizationApi>()
                     .ConfigureHttpClient(client =>
                     {
-                        var clientId = Environment.GetEnvironmentVariable("paypal_clientid");
-                        var clientSecret = Environment.GetEnvironmentVariable("paypal_clientsecret");
-
-                        var authenticationString = $"{clientId}:{clientSecret}";
-                        var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
-
                         client.BaseAddress = new Uri(PayPalApiBaseUrl);
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", GetEncodedPayPalClientCredentials());
                     });
-
+                services.AddRefitClient<IPayPalApi>()
+                    .ConfigureHttpClient((services, client) =>
+                    {
+                        var tokenInfo = GetAccessToken(services);
+                        client.BaseAddress = new Uri(PayPalApiBaseUrl);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(tokenInfo.TokenType, tokenInfo.AccessToken);
+                    });
                 services.AddTransient<IAuthorizationService, PayPalAuthorizationService>();
             })
             .Build();
+    }
+
+    private static string GetEncodedPayPalClientCredentials()
+    {
+        var clientId = Environment.GetEnvironmentVariable("paypal_clientid");
+        var clientSecret = Environment.GetEnvironmentVariable("paypal_clientsecret");
+
+        var authenticationString = $"{clientId}:{clientSecret}";
+        var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
+
+        return base64EncodedAuthenticationString;
+    }
+
+    private static TokenInfoDto GetAccessToken(IServiceProvider services)
+    {
+        var payPalAuthorizationService = services.GetService<IAuthorizationService>();
+        var tokenInfo = payPalAuthorizationService.GetAccessToken().Result;
+
+        return tokenInfo;
     }
 }

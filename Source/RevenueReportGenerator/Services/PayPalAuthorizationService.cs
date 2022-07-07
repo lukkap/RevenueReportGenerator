@@ -3,7 +3,7 @@ using Newtonsoft.Json.Serialization;
 using RevenueReportGenerator.Contract;
 using RevenueReportGenerator.DTO;
 
-namespace RevenueReportGenerator;
+namespace RevenueReportGenerator.Services;
 
 internal class PayPalAuthorizationService : IAuthorizationService
 {
@@ -17,7 +17,7 @@ internal class PayPalAuthorizationService : IAuthorizationService
     public async Task<TokenInfoDto> GetAccessToken()
     {
         var grantType = new KeyValuePair<string, string>("grant_type", "client_credentials");
-        FormUrlEncodedContent content = new FormUrlEncodedContent(new[] { grantType });
+        var content = new FormUrlEncodedContent(new[] { grantType });
         var responseString = await _payPalAuthorizationApi.GetAccessToken(content);
 
         return JsonConvert.DeserializeObject<TokenInfoDto>(responseString,
