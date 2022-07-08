@@ -21,12 +21,8 @@ internal class PayPalAuthorizationService : IAuthorizationService
         var responseString = await _payPalAuthorizationApi.GetAccessToken(content);
 
         return JsonConvert.DeserializeObject<TokenInfoDto>(responseString,
-            new JsonSerializerSettings
-            {
-                ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new SnakeCaseNamingStrategy()
-                }
+            new JsonSerializerSettings {
+                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() }
             });
     }
 }
