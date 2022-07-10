@@ -2,7 +2,7 @@
 
 namespace RevenueReportGenerator.Contract;
 
-internal record PayPalTransactionsQueryParams
+internal record PayPalTransactionsRequest
 {
     [AliasAs("start_date")]
     public string StartDate { get; init; }

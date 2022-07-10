@@ -4,5 +4,5 @@ namespace RevenueReportGenerator.Services;
 
 internal interface IAuthorizationService
 {
-    Task<TokenInfoDto> GetAccessToken();
+    Task<AccessTokenDto> GetAccessToken();
 }

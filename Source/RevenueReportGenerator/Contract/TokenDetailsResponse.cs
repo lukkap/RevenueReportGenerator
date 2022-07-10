@@ -1,6 +1,6 @@
-﻿namespace RevenueReportGenerator.DTO;
+﻿namespace RevenueReportGenerator.Contract;
 
-internal record TokenInfoDto
+internal record TokenDetailsResponse
 {
     public string Scope { get; set; }
     public string AccessToken { get; set; }

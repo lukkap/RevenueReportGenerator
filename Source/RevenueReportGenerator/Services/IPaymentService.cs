@@ -4,5 +4,5 @@ namespace RevenueReportGenerator.Services;
 
 internal interface IPaymentService
 {
-    Task<IEnumerable<TransactionInfoDto>> GetRevenueTransactions(DateTime startDate, DateTime endDate);
+    Task<IEnumerable<EarningDto>> GetEarningTransactions(DateTime startDate, DateTime endDate);
 }

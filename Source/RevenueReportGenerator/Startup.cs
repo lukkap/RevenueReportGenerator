@@ -30,9 +30,9 @@ internal class Startup
                 services.AddRefitClient<IPayPalApi>()
                     .ConfigureHttpClient((services, client) =>
                     {
-                        var tokenInfo = GetAccessToken(services);
+                        var accessToken = GetAccessToken(services);
                         client.BaseAddress = new Uri(PayPalApiBaseUrl);
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(tokenInfo.TokenType, tokenInfo.AccessToken);
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(accessToken.TokenType, accessToken.Value);
                     });
                 services.AddTransient<IAuthorizationService, PayPalAuthorizationService>();
             })
@@ -50,11 +50,11 @@ internal class Startup
         return base64EncodedAuthenticationString;
     }
 
-    private static TokenInfoDto GetAccessToken(IServiceProvider services)
+    private static AccessTokenDto GetAccessToken(IServiceProvider services)
     {
         var payPalAuthorizationService = services.GetService<IAuthorizationService>();
-        var tokenInfo = payPalAuthorizationService.GetAccessToken().Result;
+        var accessToken = payPalAuthorizationService.GetAccessToken().Result;
 
-        return tokenInfo;
+        return accessToken;
     }
 }
