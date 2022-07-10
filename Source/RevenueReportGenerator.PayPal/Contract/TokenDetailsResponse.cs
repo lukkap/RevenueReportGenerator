@@ -1,6 +1,6 @@
-﻿namespace RevenueReportGenerator.Contract;
+﻿namespace RevenueReportGenerator.PayPal.Contract;
 
-internal record TokenDetailsResponse
+public record TokenDetailsResponse
 {
     public string Scope { get; set; }
     public string AccessToken { get; set; }

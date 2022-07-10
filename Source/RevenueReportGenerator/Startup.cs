@@ -4,9 +4,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Refit;
-using RevenueReportGenerator.Contract;
 using RevenueReportGenerator.DTO;
-using RevenueReportGenerator.Services;
+using RevenueReportGenerator.PayPal.Contract;
+using RevenueReportGenerator.Services.Authorization;
 
 namespace RevenueReportGenerator;
 

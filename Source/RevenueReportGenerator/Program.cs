@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RevenueReportGenerator;
-using RevenueReportGenerator.Services;
+using RevenueReportGenerator.Services.Transactions;
 
 var host = Startup.CreateHost(args);
 var payPalService = ActivatorUtilities.CreateInstance<PayPalService>(host.Services);

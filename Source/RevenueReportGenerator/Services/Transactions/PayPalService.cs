@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using RevenueReportGenerator.Contract;
 using RevenueReportGenerator.DTO;
+using RevenueReportGenerator.PayPal.Contract;
 
-namespace RevenueReportGenerator.Services;
+namespace RevenueReportGenerator.Services.Transactions;
 
-internal class PayPalService : IPaymentService
+internal class PayPalService : ITransactionService
 {
     private readonly IPayPalApi _payPalApi;
 
@@ -48,7 +48,8 @@ internal class PayPalService : IPaymentService
         {
             var responseString = await _payPalApi.GetTransactions(queryParams);
             var response = JsonConvert.DeserializeObject<TransactionsResponse>(responseString,
-                new JsonSerializerSettings {
+                new JsonSerializerSettings
+                {
                     ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() }
                 });
 

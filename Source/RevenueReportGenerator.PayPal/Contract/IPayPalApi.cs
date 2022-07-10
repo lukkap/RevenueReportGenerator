@@ -1,8 +1,6 @@
-﻿using Refit;
+﻿namespace RevenueReportGenerator.PayPal.Contract;
 
-namespace RevenueReportGenerator.Contract;
-
-internal interface IPayPalApi
+public interface IPayPalApi
 {
     [Get("/v1/reporting/transactions")]
     Task<string> GetTransactions(PayPalTransactionsRequest queryParams);

@@ -1,8 +1,6 @@
-﻿using Refit;
+﻿namespace RevenueReportGenerator.PayPal.Contract;
 
-namespace RevenueReportGenerator.Contract;
-
-internal interface IAuthorizationApi
+public interface IAuthorizationApi
 {
     [Headers("Content-Type: application/x-www-form-urlencoded")]
     [Post("/v1/oauth2/token")]

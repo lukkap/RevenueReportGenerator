@@ -1,8 +1,6 @@
-﻿using Refit;
+﻿namespace RevenueReportGenerator.PayPal.Contract;
 
-namespace RevenueReportGenerator.Contract;
-
-internal record PayPalTransactionsRequest
+public record PayPalTransactionsRequest
 {
     [AliasAs("start_date")]
     public string StartDate { get; init; }

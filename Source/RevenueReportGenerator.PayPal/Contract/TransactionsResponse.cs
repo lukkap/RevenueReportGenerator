@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿namespace RevenueReportGenerator.PayPal.Contract;
 
-namespace RevenueReportGenerator.Contract;
-
-internal record TransactionsResponse
+public record TransactionsResponse
 {
     public IEnumerable<TransactionDetails> TransactionDetails { get; init; }
     public DateTime StartDate { get; init; }
@@ -11,12 +9,12 @@ internal record TransactionsResponse
     public int TotalPages { get; init; }
 }
 
-internal record TransactionDetails
+public record TransactionDetails
 {
     public TransactionInfo TransactionInfo { get; init; }
 }
 
-internal record TransactionInfo
+public record TransactionInfo
 {
     [JsonProperty("transaction_id")]
     public string Id { get; init; }
@@ -32,7 +30,7 @@ internal record TransactionInfo
     public string? Note { get; init; }
 }
 
-internal record TransactionAmount
+public record TransactionAmount
 {
     public string CurrencyCode { get; init; }
     public double Value { get; init; }
