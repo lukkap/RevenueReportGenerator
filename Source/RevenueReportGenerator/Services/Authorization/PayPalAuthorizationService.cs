@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Mapster;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RevenueReportGenerator.DTO;
 using RevenueReportGenerator.PayPal.Contract;
@@ -14,7 +15,7 @@ internal class PayPalAuthorizationService : IAuthorizationService
         _payPalAuthorizationApi = payPalAuthorizationApi;
     }
 
-    public async Task<AccessTokenDto> GetAccessToken()
+    public async Task<AccessTokenDto?> GetAccessToken()
     {
         var grantType = new KeyValuePair<string, string>("grant_type", "client_credentials");
         var content = new FormUrlEncodedContent(new[] { grantType });
@@ -26,8 +27,8 @@ internal class PayPalAuthorizationService : IAuthorizationService
                 ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() }
             });
 
-        // TODO: Map response to AccessTokenDto
+        var accessToken = response?.Adapt<AccessTokenDto>();
 
-        throw new NotImplementedException();
+        return accessToken;
     }
 }

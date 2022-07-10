@@ -3,5 +3,5 @@
 public interface IPayPalApi
 {
     [Get("/v1/reporting/transactions")]
-    Task<string> GetTransactions(PayPalTransactionsRequest queryParams);
+    Task<string> GetTransactions(PayPalTransactionsRequest request);
 }

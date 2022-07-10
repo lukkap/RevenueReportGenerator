@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Mapster;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RevenueReportGenerator.DTO;
 using RevenueReportGenerator.PayPal.Contract;
@@ -9,8 +10,6 @@ internal class PayPalService : ITransactionService
 {
     private readonly IPayPalApi _payPalApi;
 
-    private const string CompletedStatus = "S";
-
     public PayPalService(IPayPalApi payPalApi)
     {
         _payPalApi = payPalApi;
@@ -18,7 +17,7 @@ internal class PayPalService : ITransactionService
 
     public async Task<IEnumerable<EarningDto>> GetEarningTransactions(DateTime startDate, DateTime endDate)
     {
-        var queryParams = new PayPalTransactionsRequest
+        var request = new PayPalTransactionsRequest
         {
             StartDate = startDate.ToPayPalFormat(),
             EndDate = endDate.ToPayPalFormat(),
@@ -27,26 +26,22 @@ internal class PayPalService : ITransactionService
             Page = 1
         };
 
-        var transactions = await GetTransactions(queryParams).ToListAsync();
+        var transactions = await GetTransactions(request).ToListAsync();
 
         var earningTransactions = transactions
             .SelectMany(tds => tds)
-            .Select(td => td.TransactionInfo)
-            .Where(ti => ti.Amount?.Value > 0 &&
-                         ti.Subject is not null &&
-                         ti.Status == CompletedStatus)
-            .ToList() ?? Enumerable.Empty<TransactionInfo>();
+            .Where(td => td.IsPositiveAndCompleted())
+            .Select(td => td.Adapt<EarningDto>())
+            .ToList();
 
-        // TODO: Map earningTransactions to IEnumerable<EarningDto> 
-
-        throw new NotImplementedException();
+        return earningTransactions;
     }
 
-    private async IAsyncEnumerable<IEnumerable<TransactionDetails>> GetTransactions(PayPalTransactionsRequest queryParams)
+    private async IAsyncEnumerable<IEnumerable<TransactionDetails>> GetTransactions(PayPalTransactionsRequest request)
     {
         do
         {
-            var responseString = await _payPalApi.GetTransactions(queryParams);
+            var responseString = await _payPalApi.GetTransactions(request);
             var response = JsonConvert.DeserializeObject<TransactionsResponse>(responseString,
                 new JsonSerializerSettings
                 {
@@ -56,10 +51,10 @@ internal class PayPalService : ITransactionService
             var transactionDetails = (response?.TransactionDetails ?? Enumerable.Empty<TransactionDetails>()).ToList();
             yield return transactionDetails;
 
-            if (queryParams.Page == response?.TotalPages || !transactionDetails.Any())
+            if (request.Page == response?.TotalPages || !transactionDetails.Any())
                 break;
 
-            queryParams.Page++;
+            request.Page++;
         } while (true);
     }
 }

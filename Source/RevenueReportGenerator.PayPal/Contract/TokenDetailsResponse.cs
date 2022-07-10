@@ -2,12 +2,12 @@
 
 public record TokenDetailsResponse
 {
-    public string Scope { get; set; }
-    public string AccessToken { get; set; }
-    public string TokenType { get; set; }
-    public string AppId { get; set; }
-    public int ExpiresIn { get; set; }
-    public string Nonce { get; set; }
+    public string Scope { get; init; }
+    public string AccessToken { get; init; }
+    public string TokenType { get; init; }
+    public string AppId { get; init; }
+    public int ExpiresIn { get; init; }
+    public string Nonce { get; init; }
 
     public override string ToString()
     {

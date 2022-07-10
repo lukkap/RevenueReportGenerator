@@ -17,8 +17,11 @@ internal class Startup
     internal static IHost CreateHost(string[] args)
     {
         return Host.CreateDefaultBuilder(args)
-            .ConfigureHostConfiguration(configurationBuilder => 
-                configurationBuilder.AddEnvironmentVariables())
+            .ConfigureHostConfiguration(configurationBuilder =>
+            {
+                configurationBuilder.AddEnvironmentVariables();
+                Mappings.ConfigureTypeAdapters();
+            })
             .ConfigureServices((_, services) =>
             {
                 services.AddRefitClient<IAuthorizationApi>()
@@ -52,8 +55,11 @@ internal class Startup
 
     private static AccessTokenDto GetAccessToken(IServiceProvider services)
     {
-        var payPalAuthorizationService = services.GetService<IAuthorizationService>();
-        var accessToken = payPalAuthorizationService.GetAccessToken().Result;
+        var authorizationService = services.GetService<IAuthorizationService>();
+        var accessToken = authorizationService.GetAccessToken().Result;
+
+        if (accessToken is null)
+            throw new Exception("Access token missing!");
 
         return accessToken;
     }
