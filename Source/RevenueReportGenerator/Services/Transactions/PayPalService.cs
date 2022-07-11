@@ -15,8 +15,11 @@ internal class PayPalService : ITransactionService
         _payPalApi = payPalApi;
     }
 
-    public async Task<IEnumerable<EarningDto>> GetEarningTransactions(DateTime startDate, DateTime endDate)
+    public async Task<EarningHistoryDto> GetEarningTransactions(int year, int month)
     {
+        var startDate = new DateTime(year, month, 1);
+        var endDate = startDate.AddMonths(1).AddTicks(-1);
+
         var request = new PayPalTransactionsRequest
         {
             StartDate = startDate.ToPayPalFormat(),
@@ -34,7 +37,14 @@ internal class PayPalService : ITransactionService
             .Select(td => td.Adapt<EarningDto>())
             .ToList();
 
-        return earningTransactions;
+        var earningHistory = new EarningHistoryDto
+        {
+            Year = year,
+            Month = month,
+            Earnings = earningTransactions
+        };
+
+        return earningHistory;
     }
 
     private async IAsyncEnumerable<IEnumerable<TransactionDetails>> GetTransactions(PayPalTransactionsRequest request)
