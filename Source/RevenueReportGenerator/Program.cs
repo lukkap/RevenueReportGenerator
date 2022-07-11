@@ -1,8 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RevenueReportGenerator;
+using RevenueReportGenerator.Services.Report;
 using RevenueReportGenerator.Services.Transactions;
 
 var host = Startup.CreateHost(args);
 var payPalService = ActivatorUtilities.CreateInstance<PayPalService>(host.Services);
+var reportGenerator = ActivatorUtilities.CreateInstance<CsvReportGenerator>(host.Services);
 
-await payPalService.GetEarningTransactions(new DateTime(2022, 6, 1), new DateTime(2022, 7, 1).AddTicks(-1));
+var earningHistory = await payPalService.GetEarningTransactions(DateTime.Now.Year, DateTime.Now.Month - 1);
+var filePath = reportGenerator.GenerateEarningsReport(earningHistory);
+
+Console.WriteLine($"Earnings report created: {filePath}");

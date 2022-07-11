@@ -7,6 +7,7 @@ using Refit;
 using RevenueReportGenerator.DTO;
 using RevenueReportGenerator.PayPal.Contract;
 using RevenueReportGenerator.Services.Authorization;
+using RevenueReportGenerator.Services.Report;
 
 namespace RevenueReportGenerator;
 
@@ -38,6 +39,7 @@ internal class Startup
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(accessToken.TokenType, accessToken.Value);
                     });
                 services.AddTransient<IAuthorizationService, PayPalAuthorizationService>();
+                services.AddTransient<IReportGenerator, CsvReportGenerator>();
             })
             .Build();
     }
