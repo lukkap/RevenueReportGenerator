@@ -11,7 +11,7 @@ internal class CsvReportGenerator : IReportGenerator
         var filePath = Path.Combine(Environment.CurrentDirectory, $"{earningHistory.Year}-{earningHistory.Month}.csv");
 
         using (var writer = new StreamWriter(filePath))
-        using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+        using (var csv = new CsvWriter(writer, CultureInfo.CurrentCulture))
         {
             csv.WriteRecords(earningHistory.Earnings);
         }
