@@ -8,7 +8,9 @@ internal class CsvReportGenerator : IReportGenerator
 {
     public string GenerateEarningsReport(EarningHistoryDto earningHistory)
     {
-        var filePath = Path.Combine(Environment.CurrentDirectory, $"{earningHistory.Year}-{earningHistory.Month}.csv");
+        var folderPath = Environment.GetEnvironmentVariable("outputpath") ?? Environment.CurrentDirectory;
+        var yearAndMonth = $"{earningHistory.Year}-{earningHistory.Month:00}";
+        var filePath = Path.Combine(folderPath + $"\\{yearAndMonth}", $"{yearAndMonth}.csv");
 
         using (var writer = new StreamWriter(filePath))
         using (var csv = new CsvWriter(writer, CultureInfo.CurrentCulture))
